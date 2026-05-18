@@ -16,7 +16,13 @@ public class ValidatorAttribute : ValidatorAttributeBase
 
     protected override void Validate(object value)
     {
-        var validator = (IValidator)Activator.CreateInstance(_validatorType)!;
+        if (value == null)
+            throw new BaseException("Validation Object can not be null", "ValidatorAttributeError", System.Net.HttpStatusCode.BadRequest);
+
+        var instance = Activator.CreateInstance(_validatorType);
+
+        if (instance is not IValidator validator)
+            throw new BaseException("Validator can not be null", "ValidatorAttributeError", System.Net.HttpStatusCode.BadRequest);
 
         var context = new ValidationContext<object>(value);
 
