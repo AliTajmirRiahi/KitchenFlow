@@ -59,5 +59,83 @@ namespace Restaurant.Presentation.Controllers.Orders
 
             return Ok(ApiResult<OrderDto>.Ok(order));
         }
+
+        [HttpPost("{id}/accept", Name = "AcceptOrder")]
+        public async Task<IActionResult> AcceptOrder(Guid id)
+        {
+            // Goes to next-state and gets domain/application DTO
+            var order = await _orderService.AcceptOrderAsync(id);
+
+            // Here service throws NotFoundException when not found,
+            // and middleware automatically returns 404.
+            // So no need to check "order == null" here.
+
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        [HttpPost("{id}/start-preparation", Name = "StartPreparationOrder")]
+        public async Task<IActionResult> StartPreparationOrder(Guid id)
+        {
+            // Goes to next-state and gets domain/application DTO
+            var order = await _orderService.StartPreparationAsync(id);
+
+            // Here service throws NotFoundException when not found,
+            // and middleware automatically returns 404.
+            // So no need to check "order == null" here.
+
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        [HttpPost("{id}/finish-preparation", Name = "FinishPreparationOrder")]
+        public async Task<IActionResult> FinishPreparationOrder(Guid id)
+        {
+            // Goes to next-state and gets domain/application DTO
+            var order = await _orderService.FinishPreparationAsync(id);
+
+            // Here service throws NotFoundException when not found,
+            // and middleware automatically returns 404.
+            // So no need to check "order == null" here.
+
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        [HttpPost("{id}/serve", Name = "ServeOrder")]
+        public async Task<IActionResult> ServeOrder(Guid id)
+        {
+            // Goes to next-state and gets domain/application DTO
+            var order = await _orderService.ServeAsync(id);
+
+            // Here service throws NotFoundException when not found,
+            // and middleware automatically returns 404.
+            // So no need to check "order == null" here.
+
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        [HttpPost("{id}/close", Name = "CloseOrder")]
+        public async Task<IActionResult> CloseOrder(Guid id)
+        {
+            // Goes to next-state and gets domain/application DTO
+            var order = await _orderService.CloseAsync(id);
+
+            // Here service throws NotFoundException when not found,
+            // and middleware automatically returns 404.
+            // So no need to check "order == null" here.
+
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        [HttpPost("{id}/cancel", Name = "CancelOrder")]
+        public async Task<IActionResult> CancelOrder(Guid id)
+        {
+            // Goes to cancel-state and gets domain/application DTO
+            var order = await _orderService.CancelAsync(id);
+
+            // Here service throws NotFoundException when not found,
+            // and middleware automatically returns 404.
+            // So no need to check "order == null" here.
+
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
     }
 }

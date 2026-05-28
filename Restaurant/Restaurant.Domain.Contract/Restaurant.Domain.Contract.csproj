@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Arta.Domain.Core\Arta.Domain.Core.csproj" />
+  </ItemGroup>
+
 </Project>

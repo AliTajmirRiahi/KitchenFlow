@@ -36,9 +36,13 @@ namespace Restaurant.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Order order)
+        public async Task UpdateAsync(Order order)
         {
-            throw new NotImplementedException();
+            order.Validate();
+
+            _dbContext.Orders.Update(order);
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public Task<IReadOnlyList<Order>> GetActiveOrdersAsync()

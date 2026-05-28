@@ -22,6 +22,7 @@ namespace Restaurant.Application
             _mapper = mapper;
         }
 
+
         public async Task<Guid> AddAsync(OrderDto orderDto)
         {
             // Map DTO to Domain Entity
@@ -29,13 +30,100 @@ namespace Restaurant.Application
 
             return await _orderRepository.AddAsync(order);
         }
+        private async Task<Order> GetOrderOrThrowAsync(Guid id)
+        {
+            // Load aggregate (with Items thanks to Include)
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            //Check existance of order
+            if (order == null)
+                throw new NotFoundException($"Order with id {id} was not found.", "OrderNotFoundError");
+
+            return order;
+        }
 
         public async Task<OrderDto> GetAsync(Guid id)
         {
-             var order = await _orderRepository.GetByIdAsync(id);
+            var order = await GetOrderOrThrowAsync(id);
 
-            if (order == null)
-                throw new NotFoundException($"Order with id {id} was not found.","OrderNotFoundError");
+            return _mapper.ToDto(order);
+        }
+
+
+        public async Task<OrderDto> AcceptOrderAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            // Domain-driven state transition
+            order.Accept();
+
+            // Repository handles SaveChanges internally
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
+        }
+
+        public async Task<OrderDto> StartPreparationAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            // Domain-driven state transition
+            order.StartPreparation();
+
+            // Repository handles SaveChanges internally
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
+        }
+
+        public async Task<OrderDto> FinishPreparationAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            // Domain-driven state transition
+            order.FinishPreparation();
+
+            // Repository handles SaveChanges internally
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
+        }
+
+        public async Task<OrderDto> ServeAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            // Domain-driven state transition
+            order.Serve();
+
+            // Repository handles SaveChanges internally
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
+        }
+
+        public async Task<OrderDto> CloseAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            // Domain-driven state transition
+            order.Close();
+
+            // Repository handles SaveChanges internally
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
+        }
+
+        public async Task<OrderDto> CancelAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            // Domain-driven state transition
+            order.Cancel();
+
+            // Repository handles SaveChanges internally
+            await _orderRepository.UpdateAsync(order);
 
             return _mapper.ToDto(order);
         }

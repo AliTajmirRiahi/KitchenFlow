@@ -1,4 +1,5 @@
-﻿using Restaurant.Domain.Contract.Order;
+﻿using Arta.Domain.Core.Commons.Enums;
+using Restaurant.Domain.Contract.Order;
 using Restaurant.Domain.Order.Mappers;
 using Riok.Mapperly.Abstractions;
 
@@ -24,6 +25,9 @@ namespace Restaurant.Domain.Order.Mappers
 
             //2.Map Items Dto 
             dto.Items = [.. order.Items.Select(_itemMapper.ToDto)];
+
+            //3.Other map
+            dto.OrderStatusDescription = order.Status.ToDescription();
 
             return dto;
         }

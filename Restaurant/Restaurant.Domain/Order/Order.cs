@@ -1,9 +1,11 @@
-﻿using Arta.Domain.Core.Commons.Enums;
+﻿using Arta.Base.Core.Exceptions;
+using Arta.Domain.Core.Commons.Enums;
 using Arta.Domain.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using static Arta.Domain.Core.Commons.Enums.Enums;
@@ -57,11 +59,22 @@ namespace Restaurant.Domain.Order
 
         private void Fire(OrderTrigger trigger)
         {
-            if (_stateMachine == null)
-                InitializeStateMachine(this.Status);
+            try
+            {
+                if (_stateMachine == null)
+                    InitializeStateMachine(this.Status);
 
-            _stateMachine!.Machine.Fire(trigger);
-            Status = _stateMachine.Machine.State; 
+                _stateMachine!.Machine.Fire(trigger);
+                Status = _stateMachine.Machine.State;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Converting a system error into a business error that is understandable to the client
+                throw new BaseException(
+                    $"Cannot perform '{trigger}' on an order that is currently '{Status}'.",
+                    "InvalidStateTransition",
+                    HttpStatusCode.BadRequest);
+            }
         }
 
         public void Accept() => Fire(OrderTrigger.Accept);
