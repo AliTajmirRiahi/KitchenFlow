@@ -32,10 +32,12 @@ namespace Restaurant.Domain.Order
                 .Permit(OrderTrigger.Cancel, OrderStatus.Cancelled);
 
             Machine.Configure(OrderStatus.Confirmed)
-                .Permit(OrderTrigger.StartPrep, OrderStatus.InPreparation);
+                .Permit(OrderTrigger.StartPrep, OrderStatus.InPreparation)
+                .Permit(OrderTrigger.Cancel, OrderStatus.Cancelled);
 
             Machine.Configure(OrderStatus.InPreparation)
-                .Permit(OrderTrigger.FinishPrep, OrderStatus.Ready);
+                .Permit(OrderTrigger.FinishPrep, OrderStatus.Ready)
+                .Permit(OrderTrigger.Cancel, OrderStatus.Cancelled);
 
             Machine.Configure(OrderStatus.Ready)
                 .Permit(OrderTrigger.Serve, OrderStatus.Delivered);

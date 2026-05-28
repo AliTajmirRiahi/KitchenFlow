@@ -16,5 +16,12 @@ namespace Arta.Domain.Core.Model
 
         public void ClearDomainEvents() =>
             _domainEvents.Clear();
+
+        
+        public new void Delete()
+        {
+            base.Delete();
+            // AddDomainEvent(new EntityDeletedEvent(this.Id));
+        }
     }
 }

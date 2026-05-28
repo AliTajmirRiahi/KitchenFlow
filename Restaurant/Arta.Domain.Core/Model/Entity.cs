@@ -10,6 +10,17 @@ namespace Arta.Domain.Core.Model
     {
         public TId Id { get; protected set; } = default!;
 
+        // Default value is false (not deleted)
+        public bool IsDeleted { get; protected set; } = false;
+
+        // RowVersion/Timestamp used by EF Core for optimistic concurrency
+        public byte[] Version { get; protected set; } = default!;
+
+        public void Delete()
+        {
+            this.IsDeleted = true;
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj is not Entity<TId> other)
