@@ -29,7 +29,6 @@ namespace Restaurant.Unit.Test.Presentation.Configs
             var provider = services.BuildServiceProvider();
 
             // Assert
-            // مثال: فرض کنیم Infrastructure یک RestaurantDbContext اضافه می‌کنه
             var repo = provider.GetService<RestaurantDbContext>();
             Assert.NotNull(repo);
         }
@@ -45,11 +44,11 @@ namespace Restaurant.Unit.Test.Presentation.Configs
             services.AddInfrastructure(configuration);
             services.AddApplications();
             services.AddRepositories();
+            services.AddMappers();
 
             var provider = services.BuildServiceProvider();
 
             // Assert
-            // مثال: فرض کنیم Application یک IApplicationService اضافه می‌کنه
             var service = provider.GetService<IApplicationService>();
             Assert.NotNull(service);
         }
@@ -68,7 +67,6 @@ namespace Restaurant.Unit.Test.Presentation.Configs
             var provider = services.BuildServiceProvider();
 
             // Assert
-            // مثال: فرض کنیم Restaurant.Domain یک IOrderRepository اضافه می‌کنه
             var service = provider.GetService<IOrderRepository>();
             Assert.NotNull(service);
         }

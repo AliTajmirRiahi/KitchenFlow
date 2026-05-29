@@ -20,6 +20,7 @@ namespace Restaurant.Infrastructure.Persistence
         {
             base.OnModelCreating(modelBuilder);
 
+
             // Aplly RowVersion/Timestamp in SQL Server
             // Get all entity types that are in domain
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -39,6 +40,14 @@ namespace Restaurant.Infrastructure.Persistence
                         modelBuilder.Entity(entityType.ClrType)
                             .Property("Version")
                             .IsRowVersion();
+
+                        if (Database.ProviderName == "Microsoft.EntityFrameworkCore.InMemory")
+                        {
+                            modelBuilder.Entity(entityType.ClrType)
+                                        .Property("Version")
+                                        .IsRequired(false);
+                        }
+
                     }
 
                     // 2. Configure Global Query Filter for Soft Delete
@@ -67,8 +76,8 @@ namespace Restaurant.Infrastructure.Persistence
             {
                 entity.HasKey(oi => oi.Id);
                 entity.Property(oi => oi.Quantity).IsRequired();
-                entity.Property(oi => oi.UnitPrice).HasPrecision(38,0).IsRequired();
-                entity.Property(oi => oi.Total).HasPrecision(38,0).IsRequired();
+                entity.Property(oi => oi.UnitPrice).HasPrecision(38, 0).IsRequired();
+                entity.Property(oi => oi.Total).HasPrecision(38, 0).IsRequired();
             });
         }
         private void ConfigureSoftDeleteFilter(ModelBuilder modelBuilder, IMutableEntityType entityType)

@@ -27,21 +27,16 @@ namespace Restaurant.Unit.Test.Presentation.Controllers
                 TableId = 2
             };
 
-            var order = new Order(orderDto.CustomerId, orderDto.TableId);
             var expectedOrderId = Guid.NewGuid();
 
             var serviceMock = new Mock<IOrderService>();
-            serviceMock.Setup(s => s.AddAsync(It.IsAny<Order>()))
+            serviceMock.Setup(s => s.AddAsync(It.IsAny<OrderDto>()))
                 .ReturnsAsync(expectedOrderId);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock.Setup(m => m.ToEntity(orderDto))
-                .Returns(order);
-
-            var controller = new OrderController(serviceMock.Object, mapperMock.Object);
+            var controller = new OrderController(serviceMock.Object);
 
             // Act
-            var result = await controller.AddOrder(orderDto) as OkObjectResult;
+            var result = await controller.AddOrder(orderDto) as CreatedAtActionResult;
 
             // Assert
             Assert.NotNull(result);
@@ -49,8 +44,7 @@ namespace Restaurant.Unit.Test.Presentation.Controllers
             Assert.NotNull(apiResult);
             Assert.Equal(expectedOrderId, apiResult.Payload!.Id);
 
-            serviceMock.Verify(s => s.AddAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToEntity(orderDto), Times.Once);
+            serviceMock.Verify(s => s.AddAsync(orderDto), Times.Once);
         }
     }
 }

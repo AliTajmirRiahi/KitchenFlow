@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Unit.Test.Infrastructure.Repositories
+namespace Restaurant.Unit.Test.Infrastructure.Repositories.Order
 {
     public class OrderRepositoryTests
     {
@@ -28,7 +28,8 @@ namespace Restaurant.Unit.Test.Infrastructure.Repositories
             using var context = CreateDbContext();
             var repository = new OrderRepository(context);
 
-            var order = new Order(customerId: 1, tableId: 2);
+            var order = new Restaurant.Domain.Order.Order(customerId: 1, tableId: 2);
+
             order.AddItem(productId: 100, quantity: 2, unitPrice: 50);
 
             // Act

@@ -1,6 +1,8 @@
 ﻿using Moq;
 using Restaurant.Application;
+using Restaurant.Domain.Contract.Order;
 using Restaurant.Domain.Order;
+using Restaurant.Domain.Order.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,11 @@ namespace Restaurant.Unit.Test.Application
         {
             // Arrange
             var order = new Order(1, 2);
+            var orderDto = new OrderDto()
+            {
+                CustomerId = order.CustomerId,
+                TableId = order.TableId,
+            };
             var expectedId = Guid.NewGuid();
 
             var repositoryMock = new Mock<IOrderRepository>();
@@ -23,10 +30,13 @@ namespace Restaurant.Unit.Test.Application
                 .Setup(r => r.AddAsync(order))
                 .ReturnsAsync(expectedId);
 
-            var service = new OrderService(repositoryMock.Object);
+            var mapperOrderMock = new Mock<IMapperOrder>();
+            mapperOrderMock.Setup(r => r.ToEntity(orderDto)).Returns(order);
+
+            var service = new OrderService(repositoryMock.Object, mapperOrderMock.Object);
 
             // Act
-            var result = await service.AddAsync(order);
+            var result = await service.AddAsync(orderDto);
 
             // Assert
             Assert.Equal(expectedId, result);
