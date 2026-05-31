@@ -31,6 +31,18 @@ namespace KitchenFlow.Application
             return await _orderRepository.AddAsync(order);
         }
 
+        public async Task<OrderDto> UpdateAsync(Guid id, UpdateOrderDto updateOrderDto)
+        {
+            // Load aggregate (with Items thanks to Include)
+            var order = await GetOrderOrThrowAsync(id);
+
+            order.ChangeTable(updateOrderDto.TableId);
+
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
+        }
+
         public async Task<OrderDto> AddItemsAsync(Guid id, IEnumerable<OrderItemDto> orderItemsDto)
         {
             // Load aggregate (with Items thanks to Include)

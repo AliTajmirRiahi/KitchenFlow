@@ -45,6 +45,46 @@ namespace KitchenFlow.Unit.Test.Application
         }
 
         [Fact]
+        public async Task UpdateAsync_Should_Update_And_Return_Dto()
+        {
+            // Arrange
+            var order = new Order(1, 2);
+            var orderId = order.Id;
+
+            var updateDto = new UpdateOrderDto
+            {
+                TableId = 3,
+            };
+
+            var repositoryMock = new Mock<IOrderRepository>();
+            repositoryMock
+                .Setup(r => r.GetByIdAsync(orderId))
+                .ReturnsAsync(order);
+
+            repositoryMock
+                .Setup(r => r.UpdateAsync(It.IsAny<Order>()))
+                .Returns(Task.CompletedTask);
+
+            var mapperMock = new Mock<IMapperOrder>();
+            mapperMock
+                .Setup(m => m.ToDto(It.IsAny<Order>()))
+                .Returns<Order>(o => new OrderDto { TableId = o.TableId });
+
+            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+
+            // Act
+            var result = await service.UpdateAsync(orderId, updateDto);
+
+            // Assert
+            Assert.Equal(updateDto.TableId, result.TableId);
+
+            repositoryMock.Verify(r => r.UpdateAsync(It.Is<Order>(o => o.TableId == 3)), Times.Once);
+            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
+            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
+            mapperMock.Verify(m => m.ToDto(order), Times.Once);
+        }
+
+        [Fact]
         public async Task AddItemsAsync_Should_Add_Items_And_Return_Dto()
         {
             // Arrange

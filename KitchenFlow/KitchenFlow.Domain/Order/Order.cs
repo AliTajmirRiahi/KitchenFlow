@@ -34,8 +34,7 @@ namespace KitchenFlow.Domain.Order
             if (customerId <= 0)
                 throw new DomainValidationException("CustomerId is invalid.", "ORDER_INVALID_CustomerId", System.Net.HttpStatusCode.UnprocessableEntity);
 
-            if (tableId <= 0)
-                throw new DomainValidationException("TableId must be greater than zero.", "ORDER_INVALID_tableId", System.Net.HttpStatusCode.UnprocessableEntity);
+            IsValidTable(tableId);
 
             Id = Guid.NewGuid();
             CustomerId = customerId;
@@ -44,6 +43,7 @@ namespace KitchenFlow.Domain.Order
 
             InitializeStateMachine(OrderStatus.Created);
         }
+
 
         public void AddItem(int productId, int quantity, decimal unitPrice)
         {
@@ -64,25 +64,7 @@ namespace KitchenFlow.Domain.Order
             _stateMachine = new OrderStatusStateMachine(orderStatus);
         }
 
-        private void Fire(OrderTrigger trigger)
-        {
-            try
-            {
-                if (_stateMachine == null)
-                    InitializeStateMachine(this.Status);
 
-                _stateMachine!.Machine.Fire(trigger);
-                Status = _stateMachine.Machine.State;
-            }
-            catch (InvalidOperationException ex)
-            {
-                // Converting a system error into a business error that is understandable to the client
-                throw new BaseException(
-                    $"Cannot perform '{trigger}' on an order that is currently '{Status}'.",
-                    "InvalidStateTransition",
-                    HttpStatusCode.BadRequest);
-            }
-        }
 
         public void Accept() => Fire(OrderTrigger.Accept);
         public void StartPreparation() => Fire(OrderTrigger.StartPrep);
@@ -106,5 +88,43 @@ namespace KitchenFlow.Domain.Order
 
             Status = _stateMachine.Machine.State;
         }
+
+        public void ChangeTable(int tableId)
+        {
+            IsValidTable(tableId);
+
+            this.TableId = tableId;
+        }
+
+
+        #region Private Methods
+
+        private static void IsValidTable(int tableId)
+        {
+            if (tableId <= 0)
+                throw new DomainValidationException("TableId must be greater than zero.", "ORDER_INVALID_tableId", System.Net.HttpStatusCode.UnprocessableEntity);
+        }
+
+        private void Fire(OrderTrigger trigger)
+        {
+            try
+            {
+                if (_stateMachine == null)
+                    InitializeStateMachine(this.Status);
+
+                _stateMachine!.Machine.Fire(trigger);
+                Status = _stateMachine.Machine.State;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Converting a system error into a business error that is understandable to the client
+                throw new BaseException(
+                    $"Cannot perform '{trigger}' on an order that is currently '{Status}'.",
+                    "InvalidStateTransition",
+                    HttpStatusCode.BadRequest);
+            }
+        }
+
+        #endregion
     }
 }

@@ -2,9 +2,10 @@
 
 namespace KitchenFlow.Application
 {
-    public interface IOrderService 
+    public interface IOrderService
     {
         public Task<Guid> AddAsync(OrderDto order);
+        public Task<OrderDto> UpdateAsync(Guid id, UpdateOrderDto updateOrderDto);
         public Task<OrderDto> GetAsync(Guid id);
         public Task<OrderDto> AcceptOrderAsync(Guid id);
         public Task<OrderDto> StartPreparationAsync(Guid id);

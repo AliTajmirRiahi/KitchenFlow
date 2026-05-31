@@ -61,6 +61,23 @@ namespace KitchenFlow.Presentation.Controllers.Orders
         }
 
         /// <summary>
+        /// Update an order and returns 200 OK status.
+        /// </summary>
+        [HttpPatch("{id}/update", Name = "UpdateOrder")]
+        [Validator(typeof(OrderBasicValidator), "orderDto")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] UpdateOrderDto updateOrderDto)
+        {
+            // Execute business logic via Application Service
+            var order = await _orderService.UpdateAsync(id, updateOrderDto);
+
+            // Return 200 OK with the location of the resource
+            return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        /// <summary>
         /// Gets an order by Id.
         /// </summary>
         [HttpGet("{id}", Name = "GetOrderById")]
