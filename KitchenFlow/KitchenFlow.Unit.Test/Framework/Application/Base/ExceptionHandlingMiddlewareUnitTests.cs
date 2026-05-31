@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Moq;
 using Xunit;
 
-namespace Restaurant.Unit.Test.Framework.Application.Base
+namespace KitchenFlow.Unit.Test.Framework.Application.Base
 {
     public class ExceptionHandlingMiddlewareUnitTests
     {

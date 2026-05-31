@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Restaurant.Unit.Test.Framework.Base.ApiResults
+namespace KitchenFlow.Unit.Test.Framework.Base.ApiResults
 {
     public class ApiResultTests
     {

@@ -1,10 +1,10 @@
-﻿using Restaurant.Domain.Contract.Order;
+﻿using KitchenFlow.Domain.Contract.Order;
 using Riok.Mapperly.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Restaurant.Domain.Order.Mappers
+namespace KitchenFlow.Domain.Order.Mappers
 {
     [Mapper]
     public partial class MapperOrderItem : IMapperOrderItem

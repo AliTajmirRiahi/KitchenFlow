@@ -1,12 +1,12 @@
 ﻿using Arta.Base.Core.ApiResults;
 using Arta.Base.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using Restaurant.Domain.Order;
-using Restaurant.Infrastructure.Repositories;
-using Restaurant.Presentation.Validators;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Infrastructure.Repositories;
+using KitchenFlow.Presentation.Validators;
 using System;
 
-namespace Restaurant.Presentation.Controllers.Tests
+namespace KitchenFlow.Presentation.Controllers.Tests
 {
     [ApiController]
     [Route("[controller]")]

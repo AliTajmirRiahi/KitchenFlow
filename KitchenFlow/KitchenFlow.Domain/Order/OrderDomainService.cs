@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Domain.Order
+namespace KitchenFlow.Domain.Order
 {
     public class OrderDomainService
     {

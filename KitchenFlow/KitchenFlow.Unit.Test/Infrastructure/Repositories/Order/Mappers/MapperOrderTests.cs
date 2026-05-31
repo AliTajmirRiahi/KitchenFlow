@@ -2,11 +2,11 @@
 using System.Linq;
 using Moq;
 using Xunit;
-using Restaurant.Domain.Order;
-using Restaurant.Domain.Order.Mappers;
-using Restaurant.Domain.Contract.Order;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Domain.Order.Mappers;
+using KitchenFlow.Domain.Contract.Order;
 
-namespace Restaurant.Unit.Test.Infrastructure.Repositories.Order.Mappers
+namespace KitchenFlow.Unit.Test.Infrastructure.Repositories.Order.Mappers
 {
     public class MapperOrderTests
     {
@@ -16,7 +16,7 @@ namespace Restaurant.Unit.Test.Infrastructure.Repositories.Order.Mappers
             // Arrange
             var itemMapperMock = new Mock<IMapperOrderItem>();
 
-            var order = new Restaurant.Domain.Order.Order(customerId: 10, tableId: 5);
+            var order = new KitchenFlow.Domain.Order.Order(customerId: 10, tableId: 5);
 
             var mapper = new MapperOrder(itemMapperMock.Object);
 
@@ -37,7 +37,7 @@ namespace Restaurant.Unit.Test.Infrastructure.Repositories.Order.Mappers
             // Arrange
             var itemMapperMock = new Mock<IMapperOrderItem>();
 
-            var order = new Restaurant.Domain.Order.Order(customerId: 10, tableId: 5);
+            var order = new KitchenFlow.Domain.Order.Order(customerId: 10, tableId: 5);
             order.AddItem(productId: 1, quantity: 2, unitPrice: 100m);
             order.AddItem(productId: 2, quantity: 3, unitPrice: 200m);
 
@@ -74,7 +74,7 @@ namespace Restaurant.Unit.Test.Infrastructure.Repositories.Order.Mappers
         {
             // Arrange
             var itemMapperMock = new Mock<IMapperOrderItem>();
-            var order = new Restaurant.Domain.Order.Order(customerId: 1, tableId: 1);
+            var order = new KitchenFlow.Domain.Order.Order(customerId: 1, tableId: 1);
 
             var mapper = new MapperOrder(itemMapperMock.Object);
 

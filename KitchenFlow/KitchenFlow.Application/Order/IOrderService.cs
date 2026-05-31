@@ -1,6 +1,6 @@
-﻿using Restaurant.Domain.Contract.Order;
+﻿using KitchenFlow.Domain.Contract.Order;
 
-namespace Restaurant.Application
+namespace KitchenFlow.Application
 {
     public interface IOrderService 
     {

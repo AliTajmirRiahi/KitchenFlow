@@ -1,17 +1,17 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Restaurant.Domain.Order;
+using KitchenFlow.Domain.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Restaurant.Presentation;
-using Restaurant.Application;
-using Restaurant.Infrastructure.Persistence;
+using KitchenFlow.Presentation;
+using KitchenFlow.Application;
+using KitchenFlow.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Restaurant.Integration.Test.Presentation.Configs
+namespace KitchenFlow.Integration.Test.Presentation.Configs
 {
     public class DependencyInjectionTests : IClassFixture<WebApplicationFactory<Program>>
     {

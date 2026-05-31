@@ -1,15 +1,15 @@
 ﻿using Arta.Application.Core;
 using Arta.Base.Core.Exceptions;
-using Restaurant.Domain.Contract.Order;
-using Restaurant.Domain.Order;
-using Restaurant.Domain.Order.Mappers;
+using KitchenFlow.Domain.Contract.Order;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Domain.Order.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Application
+namespace KitchenFlow.Application
 {
     public class OrderService : ApplicationService, IOrderService
     {

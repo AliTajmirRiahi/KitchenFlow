@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Arta.Domain.Core.Commons.Enums.Enums;
 
-namespace Restaurant.Domain.Order
+namespace KitchenFlow.Domain.Order
 {
     public interface IOrderStatusStateMachine : IStatusStateMachine
     {

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Restaurant.Infrastructure.Persistence.Migrations
+namespace KitchenFlow.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class AddSoftDeleteAndRowVersion : Migration

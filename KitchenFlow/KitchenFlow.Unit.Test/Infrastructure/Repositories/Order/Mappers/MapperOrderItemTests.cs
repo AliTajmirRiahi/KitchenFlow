@@ -1,9 +1,9 @@
 ﻿using Xunit;
-using Restaurant.Domain.Order;
-using Restaurant.Domain.Order.Mappers;
-using Restaurant.Domain.Contract.Order;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Domain.Order.Mappers;
+using KitchenFlow.Domain.Contract.Order;
 
-namespace Restaurant.Unit.Test.Infrastructure.Repositories.Order.Mappers
+namespace KitchenFlow.Unit.Test.Infrastructure.Repositories.Order.Mappers
 {
     public class MapperOrderItemTests
     {

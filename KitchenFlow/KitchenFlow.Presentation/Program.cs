@@ -1,10 +1,10 @@
 using Microsoft.OpenApi;
-using Restaurant.Presentation;
+using KitchenFlow.Presentation;
 using System.Runtime.CompilerServices;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 
-[assembly: InternalsVisibleTo("Restaurant.Integration.Test")]
+[assembly: InternalsVisibleTo("KitchenFlow.Integration.Test")]
 
 var builder = WebApplication.CreateBuilder(args);
 

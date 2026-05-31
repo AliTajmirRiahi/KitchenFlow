@@ -2,7 +2,7 @@
 using Arta.Base.Core.Validators;
 using FluentValidation;
 
-namespace Restaurant.Presentation.Validators;
+namespace KitchenFlow.Presentation.Validators;
 
 public class ValidatorAttribute : ValidatorAttributeBase
 {

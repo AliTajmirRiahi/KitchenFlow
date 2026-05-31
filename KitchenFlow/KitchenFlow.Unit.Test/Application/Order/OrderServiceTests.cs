@@ -1,16 +1,16 @@
 ﻿using Arta.Base.Core.Exceptions;
 using Moq;
-using Restaurant.Application;
-using Restaurant.Domain.Contract.Order;
-using Restaurant.Domain.Order;
-using Restaurant.Domain.Order.Mappers;
+using KitchenFlow.Application;
+using KitchenFlow.Domain.Contract.Order;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Domain.Order.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Unit.Test.Application
+namespace KitchenFlow.Unit.Test.Application
 {
     public class OrderServiceTests
     {

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using Xunit;
-using Restaurant.Domain.Order;
+using KitchenFlow.Domain.Order;
 using static Arta.Domain.Core.Commons.Enums.Enums;
 using Arta.Base.Core.Exceptions;
 
-namespace Restaurant.Tests.Domain
+namespace KitchenFlow.Tests.Domain
 {
     public class OrderTests
     {

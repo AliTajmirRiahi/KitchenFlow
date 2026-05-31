@@ -1,6 +1,6 @@
 ﻿using Arta.Domain.Core.Model;
 
-namespace Restaurant.Presentation.Configs.ApiResults
+namespace KitchenFlow.Presentation.Configs.ApiResults
 {
 
     public class GuidEntity : Entity<Guid>

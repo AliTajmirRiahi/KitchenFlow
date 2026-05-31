@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Restaurant.Domain.Contract.Order;
+using KitchenFlow.Domain.Contract.Order;
 
-namespace Restaurant.Domain.Order.Validators;
+namespace KitchenFlow.Domain.Order.Validators;
 
 
 public class OrderBasicValidator : AbstractValidator<OrderDto>

@@ -1,9 +1,9 @@
 ﻿using Arta.Domain.Core.Commons.Enums;
-using Restaurant.Domain.Contract.Order;
-using Restaurant.Domain.Order.Mappers;
+using KitchenFlow.Domain.Contract.Order;
+using KitchenFlow.Domain.Order.Mappers;
 using Riok.Mapperly.Abstractions;
 
-namespace Restaurant.Domain.Order.Mappers
+namespace KitchenFlow.Domain.Order.Mappers
 {
     [Mapper]
     public partial class MapperOrder : IMapperOrder

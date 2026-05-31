@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Restaurant.Presentation.Controllers
+namespace KitchenFlow.Presentation.Controllers
 {
     [ApiController]
     [Route("api/v{version:apiVersion}/[controller]")]

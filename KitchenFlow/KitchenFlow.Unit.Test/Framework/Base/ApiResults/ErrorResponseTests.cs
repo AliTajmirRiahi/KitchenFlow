@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Restaurant.UnitTests
+namespace KitchenFlow.UnitTests
 {
     public class ErrorResponseTests
     {

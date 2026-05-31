@@ -1,5 +1,5 @@
 ﻿using Arta.Domain.Core.Model;
-using Restaurant.Domain.Order;
+using KitchenFlow.Domain.Order;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Arta.Domain.Core.Commons.Enums.Enums;
 
-namespace Restaurant.Application
+namespace KitchenFlow.Application
 {
     public interface IOrderRepository : IRepositoryBase
     {

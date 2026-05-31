@@ -1,7 +1,7 @@
 ﻿using Arta.Base.Core.Validators;
 using Xunit;
 
-namespace Restaurant.Unit.Test.Framework.Base.Validators;
+namespace KitchenFlow.Unit.Test.Framework.Base.Validators;
 
 /// <summary>
 /// Fake validator attribute used only for unit testing the base class behavior.

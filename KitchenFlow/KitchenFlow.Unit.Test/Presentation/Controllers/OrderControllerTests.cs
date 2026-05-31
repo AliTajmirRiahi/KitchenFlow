@@ -1,19 +1,19 @@
 ﻿using Arta.Base.Core.ApiResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Restaurant.Application;
-using Restaurant.Domain.Contract.Order;
-using Restaurant.Domain.Order;
-using Restaurant.Domain.Order.Mappers;
-using Restaurant.Presentation.Configs.ApiResults;
-using Restaurant.Presentation.Controllers.Orders;
+using KitchenFlow.Application;
+using KitchenFlow.Domain.Contract.Order;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Domain.Order.Mappers;
+using KitchenFlow.Presentation.Configs.ApiResults;
+using KitchenFlow.Presentation.Controllers.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Unit.Test.Presentation.Controllers
+namespace KitchenFlow.Unit.Test.Presentation.Controllers
 {
     public class OrderControllerTests
     {

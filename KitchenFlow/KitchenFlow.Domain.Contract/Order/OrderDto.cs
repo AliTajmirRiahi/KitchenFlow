@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Domain.Contract.Order
+namespace KitchenFlow.Domain.Contract.Order
 {
     public class OrderDto
     {

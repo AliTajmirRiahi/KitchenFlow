@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 using Arta.Base.Core.Exceptions;
-using Restaurant.Presentation;
+using KitchenFlow.Presentation;
 using System.Net.Http.Json;
 
-namespace Restaurant.Integration.Test.Framework.Application.Base.Exceptions
+namespace KitchenFlow.Integration.Test.Framework.Application.Base.Exceptions
 {
     public class ValidatorAttributeBaseTests
     : IClassFixture<WebApplicationFactory<Program>>

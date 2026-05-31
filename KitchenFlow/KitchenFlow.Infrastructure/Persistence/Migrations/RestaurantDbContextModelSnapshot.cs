@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Restaurant.Infrastructure.Persistence;
+using KitchenFlow.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace Restaurant.Infrastructure.Persistence.Migrations
+namespace KitchenFlow.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
     partial class RestaurantDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace Restaurant.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Restaurant.Domain.Order.Order", b =>
+            modelBuilder.Entity("KitchenFlow.Domain.Order.Order", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace Restaurant.Infrastructure.Persistence.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Order.OrderItem", b =>
+            modelBuilder.Entity("KitchenFlow.Domain.Order.OrderItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,15 +92,15 @@ namespace Restaurant.Infrastructure.Persistence.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Order.OrderItem", b =>
+            modelBuilder.Entity("KitchenFlow.Domain.Order.OrderItem", b =>
                 {
-                    b.HasOne("Restaurant.Domain.Order.Order", null)
+                    b.HasOne("KitchenFlow.Domain.Order.Order", null)
                         .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Restaurant.Domain.Order.Order", b =>
+            modelBuilder.Entity("KitchenFlow.Domain.Order.Order", b =>
                 {
                     b.Navigation("Items");
                 });

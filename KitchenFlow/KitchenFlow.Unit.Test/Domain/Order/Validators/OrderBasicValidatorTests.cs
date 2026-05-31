@@ -1,9 +1,9 @@
 ﻿using FluentValidation.TestHelper;
-using Restaurant.Domain.Contract.Order;
-using Restaurant.Domain.Order.Validators;
+using KitchenFlow.Domain.Contract.Order;
+using KitchenFlow.Domain.Order.Validators;
 using Xunit;
 
-namespace Restaurant.Unit.Test.Domain.Order.Validators
+namespace KitchenFlow.Unit.Test.Domain.Order.Validators
 {
     /// <summary>
     /// Unit tests for OrderBasicValidator.

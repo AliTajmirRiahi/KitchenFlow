@@ -1,16 +1,16 @@
 ﻿using Arta.Domain.Core.Commons.Enums;
 using Arta.Domain.Core.Model;
 using Microsoft.EntityFrameworkCore;
-using Restaurant.Application;
-using Restaurant.Domain.Order;
-using Restaurant.Infrastructure.Persistence;
+using KitchenFlow.Application;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Infrastructure.Persistence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Restaurant.Infrastructure.Repositories
+namespace KitchenFlow.Infrastructure.Repositories
 {
     public class OrderRepository : ReporsitoryBase, IOrderRepository
     {

@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
-using Restaurant.Application;
-using Restaurant.Domain.Order;
-using Restaurant.Domain.Order.Mappers;
-using Restaurant.Infrastructure.Persistence;
-using Restaurant.Infrastructure.Repositories;
+using KitchenFlow.Application;
+using KitchenFlow.Domain.Order;
+using KitchenFlow.Domain.Order.Mappers;
+using KitchenFlow.Infrastructure.Persistence;
+using KitchenFlow.Infrastructure.Repositories;
 
-namespace Restaurant.Presentation
+namespace KitchenFlow.Presentation
 {
     public static class DependencyInjection
     {
