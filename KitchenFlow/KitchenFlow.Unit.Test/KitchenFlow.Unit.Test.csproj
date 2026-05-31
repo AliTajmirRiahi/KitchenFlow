@@ -36,9 +36,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restaurant.Domain\Restaurant.Domain.csproj" />
-    <ProjectReference Include="..\Restaurant.Infrastructure\Restaurant.Infrastructure.csproj" />
-    <ProjectReference Include="..\Restaurant.Presentation\Restaurant.Presentation.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Domain\KitchenFlow.Domain.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Infrastructure\KitchenFlow.Infrastructure.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Presentation\KitchenFlow.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

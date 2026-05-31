@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Restaurant.Application\Restaurant.Application.csproj" />
-    <ProjectReference Include="..\Restaurant.Infrastructure\Restaurant.Infrastructure.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Application\KitchenFlow.Application.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Infrastructure\KitchenFlow.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

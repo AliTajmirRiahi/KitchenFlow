@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Arta.Base.Core\Arta.Base.Core.csproj" />
-    <ProjectReference Include="..\Restaurant.Presentation\Restaurant.Presentation.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Presentation\KitchenFlow.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

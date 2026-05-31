@@ -1,0 +1,6 @@
+@KitchenFlow.Presentation_HostAddress = http://localhost:5224
+
+GET {{KitchenFlow.Presentation_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

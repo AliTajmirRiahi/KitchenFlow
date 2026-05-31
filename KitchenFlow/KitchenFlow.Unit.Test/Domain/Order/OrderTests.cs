@@ -3,6 +3,7 @@ using System.Linq;
 using Xunit;
 using Restaurant.Domain.Order;
 using static Arta.Domain.Core.Commons.Enums.Enums;
+using Arta.Base.Core.Exceptions;
 
 namespace Restaurant.Tests.Domain
 {
@@ -94,7 +95,7 @@ namespace Restaurant.Tests.Domain
             order.StartPreparation();
 
             // Act & Assert
-            Assert.Throws<InvalidOperationException>(() =>
+            Assert.Throws<BaseException>(() =>
                 order.AddItem(1, 1, 10m));
         }
 

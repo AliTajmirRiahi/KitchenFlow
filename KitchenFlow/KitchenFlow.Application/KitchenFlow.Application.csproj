@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Arta.Application.Core\Arta.Application.Core.csproj" />
-    <ProjectReference Include="..\Restaurant.Application.Contract\Restaurant.Application.Contract.csproj" />
-    <ProjectReference Include="..\Restaurant.Domain\Restaurant.Domain.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Application.Contract\KitchenFlow.Application.Contract.csproj" />
+    <ProjectReference Include="..\KitchenFlow.Domain\KitchenFlow.Domain.csproj" />
   </ItemGroup>
 
 </Project>

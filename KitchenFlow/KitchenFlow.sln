@@ -9,17 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{71F93042
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{77CF6741-21AE-4478-860C-99C031D7A986}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Application", "Restaurant.Application\Restaurant.Application.csproj", "{287232DC-ECE9-41AA-A9C6-9DD5F5DE16F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Application", "KitchenFlow.Application\KitchenFlow.Application.csproj", "{287232DC-ECE9-41AA-A9C6-9DD5F5DE16F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Application.Contract", "Restaurant.Application.Contract\Restaurant.Application.Contract.csproj", "{BA11D854-73F9-4F2E-B1CC-B15CF0A910C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Application.Contract", "KitchenFlow.Application.Contract\KitchenFlow.Application.Contract.csproj", "{BA11D854-73F9-4F2E-B1CC-B15CF0A910C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Domain", "Restaurant.Domain\Restaurant.Domain.csproj", "{F084B827-731B-48FC-A840-E2DB27AF2B02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Domain", "KitchenFlow.Domain\KitchenFlow.Domain.csproj", "{F084B827-731B-48FC-A840-E2DB27AF2B02}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Domain.Contract", "Restaurant.Domain.Contract\Restaurant.Domain.Contract.csproj", "{E21F59FF-1DDA-4CDC-B26E-FAC4EBCBCB42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Domain.Contract", "KitchenFlow.Domain.Contract\KitchenFlow.Domain.Contract.csproj", "{E21F59FF-1DDA-4CDC-B26E-FAC4EBCBCB42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Infrastructure", "Restaurant.Infrastructure\Restaurant.Infrastructure.csproj", "{3AAA1FD2-06AA-4782-B802-E2074D692720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Infrastructure", "KitchenFlow.Infrastructure\KitchenFlow.Infrastructure.csproj", "{3AAA1FD2-06AA-4782-B802-E2074D692720}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Presentation", "Restaurant.Presentation\Restaurant.Presentation.csproj", "{431AC877-05AC-4CFB-9632-94E3AF6940CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Presentation", "KitchenFlow.Presentation\KitchenFlow.Presentation.csproj", "{431AC877-05AC-4CFB-9632-94E3AF6940CD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{C55263A6-764B-4CEC-84AA-E500EA6E243D}"
 EndProject
@@ -31,7 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arta.Domain.Core", "Arta.Domain.Core\Arta.Domain.Core.csproj", "{3133E4DA-579A-4961-ADE4-EABAEFD677F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant.Unit.Test", "Restaurant.Unit.Test\Restaurant.Unit.Test.csproj", "{2811A195-8DCE-4EFD-9F78-827E83673F1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenFlow.Unit.Test", "KitchenFlow.Unit.Test\KitchenFlow.Unit.Test.csproj", "{2811A195-8DCE-4EFD-9F78-827E83673F1A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Arta.Application.Core", "Arta.Application.Core\Arta.Application.Core.csproj", "{F3C2A7FE-FBEE-42F9-8168-9EB48B05D758}"
 EndProject
@@ -39,7 +39,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{C3D667C6-F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arta.Base.Core", "Arta.Base.Core\Arta.Base.Core.csproj", "{C314EAAE-4992-4AB6-9FD2-D6DB7C6ACF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant.Integration.Test", "Restaurant.Integration.Test\Restaurant.Integration.Test.csproj", "{B6EB13A0-2BAB-4515-BD1D-32220A46950B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenFlow.Integration.Test", "KitchenFlow.Integration.Test\KitchenFlow.Integration.Test.csproj", "{B6EB13A0-2BAB-4515-BD1D-32220A46950B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
