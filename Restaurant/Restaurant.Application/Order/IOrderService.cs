@@ -12,5 +12,6 @@ namespace Restaurant.Application
         public Task<OrderDto> ServeAsync(Guid id);
         public Task<OrderDto> CloseAsync(Guid id);
         public Task<OrderDto> CancelAsync(Guid id);
+        public Task<OrderDto> AddItemsAsync(Guid id, IEnumerable<OrderItemDto> orderItemsDto);
     }
 }

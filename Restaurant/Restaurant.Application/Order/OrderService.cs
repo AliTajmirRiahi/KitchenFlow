@@ -30,16 +30,20 @@ namespace Restaurant.Application
 
             return await _orderRepository.AddAsync(order);
         }
-        private async Task<Order> GetOrderOrThrowAsync(Guid id)
+
+        public async Task<OrderDto> AddItemsAsync(Guid id, IEnumerable<OrderItemDto> orderItemsDto)
         {
             // Load aggregate (with Items thanks to Include)
-            var order = await _orderRepository.GetByIdAsync(id);
+            var order = await GetOrderOrThrowAsync(id);
 
-            //Check existance of order
-            if (order == null)
-                throw new NotFoundException($"Order with id {id} was not found.", "OrderNotFoundError");
+            foreach (var item in orderItemsDto) {
+                // Map DTO to Domain Entity
+                order.AddItem(item.ProductId, item.Quantity, item.UnitPrice);
+            }
 
-            return order;
+            await _orderRepository.UpdateAsync(order);
+
+            return _mapper.ToDto(order);
         }
 
         public async Task<OrderDto> GetAsync(Guid id)
@@ -127,5 +131,20 @@ namespace Restaurant.Application
 
             return _mapper.ToDto(order);
         }
+
+
+        #region Private Methods
+
+        private async Task<Order> GetOrderOrThrowAsync(Guid id)
+        {
+            // Load aggregate (with Items thanks to Include)
+            var order = await _orderRepository.GetByIdAsync(id);
+
+            //Check existance of order
+            return order == null ? throw new NotFoundException($"Order with id {id} was not found.", "OrderNotFoundError") : order;
+        }
+
+        #endregion
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Arta.Base.Core.Exceptions;
+using Arta.Domain.Core.Commons;
 using Arta.Domain.Core.Commons.Enums;
 using Arta.Domain.Core.Model;
 using System;
@@ -30,6 +31,12 @@ namespace Restaurant.Domain.Order
 
         public Order(int customerId, int tableId)
         {
+            if (customerId <= 0)
+                throw new DomainValidationException("CustomerId is invalid.", "ORDER_INVALID_CustomerId", System.Net.HttpStatusCode.UnprocessableEntity);
+
+            if (tableId <= 0)
+                throw new DomainValidationException("TableId must be greater than zero.", "ORDER_INVALID_tableId", System.Net.HttpStatusCode.UnprocessableEntity);
+
             Id = Guid.NewGuid();
             CustomerId = customerId;
             TableId = tableId;
@@ -41,7 +48,7 @@ namespace Restaurant.Domain.Order
         public void AddItem(int productId, int quantity, decimal unitPrice)
         {
             if (Status > OrderStatus.Confirmed)
-                throw new InvalidOperationException("Cannot add items after order is started.");
+                throw new BaseException($"Can not add new item to Order with id {this.Id}.", "OrderIsImmutable", System.Net.HttpStatusCode.BadRequest);
 
             _items.Add(new OrderItem(productId, quantity, unitPrice));
         }

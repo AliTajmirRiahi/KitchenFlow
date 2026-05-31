@@ -20,3 +20,18 @@ public class OrderItemValidator : AbstractValidator<OrderItemDto>
             .WithMessage("Unit price must be greater than zero");
     }
 }
+
+public class OrderItemsValidator : AbstractValidator<IEnumerable<OrderItemDto>>
+{
+    public OrderItemsValidator()
+    {
+        // Validate the collection itself
+        RuleFor(x => x)
+            .NotNull().WithMessage("Order items are required.")
+            .NotEmpty().WithMessage("At least one order item is required.");
+
+        // Validate each element in the collection
+        RuleForEach(x => x)
+            .SetValidator(new OrderItemValidator());
+    }
+}

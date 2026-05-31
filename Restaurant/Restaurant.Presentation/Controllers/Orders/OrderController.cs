@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application;
 using Restaurant.Domain.Contract.Order;
+using Restaurant.Domain.Order;
 using Restaurant.Domain.Order.Mappers;
 using Restaurant.Domain.Order.Validators;
 using Restaurant.Presentation.Configs.ApiResults;
@@ -40,6 +41,23 @@ namespace Restaurant.Presentation.Controllers.Orders
                 new { id = orderId },
                 ApiResult<GuidEntity>.Ok(new GuidEntity(orderId))
             );
+        }
+
+        /// <summary>
+        /// Add new Items and returns 200 OK status.
+        /// </summary>
+        [HttpPost("{id}/items", Name = "AddOrderItems")]
+        [Validator(typeof(OrderItemsValidator), "orderItemsDto")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> AddOrderItems(Guid id, [FromBody] IEnumerable<OrderItemDto> orderItemsDto)
+        {
+            // Execute business logic via Application Service
+            var order = await _orderService.AddItemsAsync(id, orderItemsDto);
+
+            // Return 200 OK with the location of the resource
+            return Ok(ApiResult<OrderDto>.Ok(order));
         }
 
         /// <summary>
