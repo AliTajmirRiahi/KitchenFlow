@@ -1,5 +1,5 @@
-# Restaurant
-Restaurant is a clean‑architecture–based .NET 10 application designed to manage restaurant operations with a scalable, maintainable, and testable structure.
+# KitchenFlow
+KitchenFlow is a clean‑architecture–based .NET 10 application designed to manage restaurant operations with a scalable, maintainable, and testable structure.
 
 The project follows Domain‑Driven Design (DDD), CQRS principles, and a layered architecture separating Domain, Application, Infrastructure, and Presentation concerns.
 
