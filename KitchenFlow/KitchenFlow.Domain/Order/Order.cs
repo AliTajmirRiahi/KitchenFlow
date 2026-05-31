@@ -115,7 +115,7 @@ namespace KitchenFlow.Domain.Order
                 _stateMachine!.Machine.Fire(trigger);
                 Status = _stateMachine.Machine.State;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 // Converting a system error into a business error that is understandable to the client
                 throw new BaseException(
