@@ -43,6 +43,14 @@ namespace KitchenFlow.Application
             return _mapper.ToDto(order);
         }
 
+        public async Task DeleteAsync(Guid id)
+        {
+            var order = await GetOrderOrThrowAsync(id);
+
+            await _orderRepository.DeleteAsync(order);
+        }
+
+
         public async Task<OrderDto> AddItemsAsync(Guid id, IEnumerable<OrderItemDto> orderItemsDto)
         {
             // Load aggregate (with Items thanks to Include)

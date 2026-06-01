@@ -31,9 +31,13 @@ namespace KitchenFlow.Infrastructure.Repositories
             return order.Id;
         }
 
-        public Task DeleteAsync(Order order)
+        public async Task DeleteAsync(Order order)
         {
-            throw new NotImplementedException();
+            order.EnsureCanBeDeleted();
+
+            _dbContext.Orders.Remove(order);
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Order order)

@@ -9,6 +9,7 @@ using KitchenFlow.Domain.Order.Validators;
 using KitchenFlow.Presentation.Configs.ApiResults;
 using KitchenFlow.Presentation.Validators;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 // Assuming the namespace of your project
 namespace KitchenFlow.Presentation.Controllers.Orders
@@ -46,7 +47,7 @@ namespace KitchenFlow.Presentation.Controllers.Orders
         /// <summary>
         /// Add new Items and returns 200 OK status.
         /// </summary>
-        [HttpPost("{id}/items", Name = "AddOrderItems")]
+        [HttpPost("{id}/add-items", Name = "AddOrderItems")]
         [Validator(typeof(OrderItemsValidator), "orderItemsDto")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,6 +76,22 @@ namespace KitchenFlow.Presentation.Controllers.Orders
 
             // Return 200 OK with the location of the resource
             return Ok(ApiResult<OrderDto>.Ok(order));
+        }
+
+        /// <summary>
+        /// Delete an order and returns 200 OK status.
+        /// </summary>
+        [HttpDelete("{id}/delete", Name = "DeleteOrder")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteOrder(Guid id)
+        {
+            // Execute business logic via Application Service
+            await _orderService.DeleteAsync(id);
+
+            // Return 200 OK with the location of the resource
+            return NoContent();
         }
 
         /// <summary>
