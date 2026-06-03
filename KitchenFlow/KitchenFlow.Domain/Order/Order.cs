@@ -23,7 +23,7 @@ namespace KitchenFlow.Domain.Order
         public virtual IReadOnlyCollection<OrderItem> Items => _items.AsReadOnly();
 
         [NotMapped]
-        private OrderStatusStateMachine _stateMachine = default!;
+        private OrderStatusStateMachine _stateMachine = null!;
 
         private Order()
         {
@@ -60,7 +60,7 @@ namespace KitchenFlow.Domain.Order
 
         public void EnsureCanBeDeleted()
         {
-            // Allow delete only when it is safe/meaningful from business perspective
+            // Allow to delete only when it is safe/meaningful from business perspective
             if (Status != OrderStatus.Created && Status != OrderStatus.Cancelled)
                 throw new DomainValidationException("Only orders in Created or Cancelled status can be deleted.", "DeleteOrder", HttpStatusCode.BadRequest);
         }

@@ -4,471 +4,420 @@ using KitchenFlow.Application;
 using KitchenFlow.Domain.Contract.Order;
 using KitchenFlow.Domain.Order;
 using KitchenFlow.Domain.Order.Mappers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace KitchenFlow.Unit.Test.Application
+namespace KitchenFlow.Unit.Test.Application;
+
+public class OrderServiceTests
 {
-    public class OrderServiceTests
+    [Fact]
+    public async Task AddAsync_ValidOrderDto_ReturnsGeneratedId()
     {
-        [Fact]
-        public async Task AddAsync_Should_Call_Repository_And_Return_Id()
+        // Arrange: create order and DTO
+        var order = new Order(1, 2);
+        var orderDto = new OrderDto()
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderDto = new OrderDto()
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-            };
-            var expectedId = Guid.NewGuid();
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+        };
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.AddAsync(order))
-                .ReturnsAsync(expectedId);
+        // Expected ID returned by repository
+        var expectedId = Guid.NewGuid();
 
-            var mapperOrderMock = new Mock<IMapperOrder>();
-            mapperOrderMock.Setup(r => r.ToEntity(orderDto)).Returns(order);
+        // Mock repository behavior
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock
+            .Setup(r => r.AddAsync(order))
+            .ReturnsAsync(expectedId);
 
-            var service = new OrderService(repositoryMock.Object, mapperOrderMock.Object);
+        // Mock mapper behavior
+        var mapperOrderMock = new Mock<IMapperOrder>();
+        mapperOrderMock.Setup(r => r.ToEntity(orderDto)).Returns(order);
 
-            // Act
-            var result = await service.AddAsync(orderDto);
+        // Create service instance
+        var service = new OrderService(repositoryMock.Object, mapperOrderMock.Object);
 
-            // Assert
-            Assert.Equal(expectedId, result);
-            repositoryMock.Verify(r => r.AddAsync(order), Times.Once);
-        }
+        // Act: call service method
+        var result = await service.AddAsync(orderDto);
 
-        [Fact]
-        public async Task UpdateAsync_Should_Update_And_Return_Dto()
+        // Assert: verify returned id and repository interaction
+        Assert.Equal(expectedId, result);
+        repositoryMock.Verify(r => r.AddAsync(order), Times.Once);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ExistingOrder_ReturnsUpdatedDto()
+    {
+        // Arrange: existing order and update DTO
+        var order = new Order(1, 2);
+        var orderId = order.Id;
+
+        var updateDto = new UpdateOrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            TableId = 3,
+        };
 
-            var updateDto = new UpdateOrderDto
-            {
-                TableId = 3,
-            };
+        // Mock repository
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock
+            .Setup(r => r.GetByIdAsync(orderId))
+            .ReturnsAsync(order);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        repositoryMock
+            .Setup(r => r.UpdateAsync(It.IsAny<Order>()))
+            .Returns(Task.CompletedTask);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(It.IsAny<Order>()))
-                .Returns(Task.CompletedTask);
+        // Mock mapper
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock
+            .Setup(m => m.ToDto(It.IsAny<Order>()))
+            .Returns<Order>(o => new OrderDto { TableId = o.TableId });
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(It.IsAny<Order>()))
-                .Returns<Order>(o => new OrderDto { TableId = o.TableId });
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        // Act
+        var result = await service.UpdateAsync(orderId, updateDto);
 
-            // Act
-            var result = await service.UpdateAsync(orderId, updateDto);
+        // Assert: verify updated table id
+        Assert.Equal(updateDto.TableId, result.TableId);
 
-            // Assert
-            Assert.Equal(updateDto.TableId, result.TableId);
+        repositoryMock.Verify(r => r.UpdateAsync(It.Is<Order>(o => o.TableId == 3)), Times.Once);
+        repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
+        repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
+        mapperMock.Verify(m => m.ToDto(order), Times.Once);
+    }
 
-            repositoryMock.Verify(r => r.UpdateAsync(It.Is<Order>(o => o.TableId == 3)), Times.Once);
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
+    [Fact]
+    public async Task AddItemsAsync_ValidItems_ReturnsOrderDtoWithItems()
+    {
+        // Arrange: existing order
+        var order = new Order(1, 2);
+        var orderId = order.Id;
 
-        [Fact]
-        public async Task AddItemsAsync_Should_Add_Items_And_Return_Dto()
+        // Create order items
+        var items = new List<OrderItemDto>
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
-
-            var items = new List<OrderItemDto>
+            new OrderItemDto
             {
-                new OrderItemDto
-                {
-                    ProductId = 10,
-                    Quantity = 2,
-                    UnitPrice = 100
-                },
-                new OrderItemDto
-                {
-                    ProductId = 20,
-                    Quantity = 1,
-                    UnitPrice = 200
-                }
-            };
-
-            var expectedDto = new OrderDto
+                ProductId = 10,
+                Quantity = 2,
+                UnitPrice = 100
+            },
+            new OrderItemDto
             {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>(items)
-            };
+                ProductId = 20,
+                Quantity = 1,
+                UnitPrice = 200
+            }
+        };
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
-
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
-
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
-
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
-
-            // Act
-            var result = await service.AddItemsAsync(orderId, items);
-
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
-            Assert.Equal(expectedDto.Items.Count, result.Items.Count);
-            Assert.Equal(expectedDto.Items[0].ProductId, result.Items[0].ProductId);
-            Assert.Equal(expectedDto.Items[0].Quantity, result.Items[0].Quantity);
-            Assert.Equal(expectedDto.Items[0].UnitPrice, result.Items[0].UnitPrice);
-
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetAsync_Should_Return_Dto()
+        // Expected DTO returned from mapper
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>(items)
+        };
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        // Mock repository
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock
+            .Setup(r => r.GetByIdAsync(orderId))
+            .ReturnsAsync(order);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        repositoryMock
+            .Setup(r => r.UpdateAsync(order))
+            .Returns(Task.CompletedTask);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+        // Mock mapper
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock
+            .Setup(m => m.ToDto(order))
+            .Returns(expectedDto);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            // Act
-            var result = await service.GetAsync(orderId);
+        // Act
+        var result = await service.AddItemsAsync(orderId, items);
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
-            Assert.NotNull(result.Items);
+        // Assert: verify returned DTO values
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
+        Assert.Equal(expectedDto.Items.Count, result.Items.Count);
+        Assert.Equal(expectedDto.Items[0].ProductId, result.Items[0].ProductId);
+        Assert.Equal(expectedDto.Items[0].Quantity, result.Items[0].Quantity);
+        Assert.Equal(expectedDto.Items[0].UnitPrice, result.Items[0].UnitPrice);
 
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
+        repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
+        repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
+        mapperMock.Verify(m => m.ToDto(order), Times.Once);
+    }
 
-        [Fact]
-        public async Task AcceptOrderAsync_Should_Update_Order_And_Return_Dto()
+    [Fact]
+    public async Task GetAsync_OrderExists_ReturnsOrderDto()
+    {
+        // Arrange: existing order
+        var order = new Order(1, 2);
+        var orderId = order.Id;
+
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        // Mock repository
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock
+            .Setup(r => r.GetByIdAsync(orderId))
+            .ReturnsAsync(order);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        // Mock mapper
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock
+            .Setup(m => m.ToDto(order))
+            .Returns(expectedDto);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+        // Act
+        var result = await service.GetAsync(orderId);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
+        Assert.NotNull(result.Items);
 
-            // Act
-            var result = await service.AcceptOrderAsync(orderId);
+        repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
+        mapperMock.Verify(m => m.ToDto(order), Times.Once);
+    }
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
+    [Fact]
+    public async Task AcceptOrderAsync_ValidOrder_UpdatesStatusAndReturnsDto()
+    {
+        // Arrange
+        var order = new Order(1, 2);
+        var orderId = order.Id;
 
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task StartPreparationAsync_Should_Update_Order_And_Return_Dto()
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            order.Accept();
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock.Setup(r => r.GetByIdAsync(orderId)).ReturnsAsync(order);
+        repositoryMock.Setup(r => r.UpdateAsync(order)).Returns(Task.CompletedTask);
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock.Setup(m => m.ToDto(order)).Returns(expectedDto);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
+        // Act
+        var result = await service.AcceptOrderAsync(orderId);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
+        repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
+        mapperMock.Verify(m => m.ToDto(order), Times.Once);
+    }
 
-            // Act
-            var result = await service.StartPreparationAsync(orderId);
+    [Fact]
+    public async Task StartPreparationAsync_OrderAccepted_UpdatesStatusAndReturnsDto()
+    {
+        // Arrange
+        var order = new Order(1, 2);
+        var orderId = order.Id;
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
+        // Move order to accepted state
+        order.Accept();
 
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task FinishPreparationAsync_Should_Update_Order_And_Return_Dto()
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            order.Accept();
-            order.StartPreparation();
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock.Setup(r => r.GetByIdAsync(orderId)).ReturnsAsync(order);
+        repositoryMock.Setup(r => r.UpdateAsync(order)).Returns(Task.CompletedTask);
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock.Setup(m => m.ToDto(order)).Returns(expectedDto);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
+        // Act
+        var result = await service.StartPreparationAsync(orderId);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
+        repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
+        mapperMock.Verify(m => m.ToDto(order), Times.Once);
+    }
 
-            // Act
-            var result = await service.FinishPreparationAsync(orderId);
+    [Fact]
+    public async Task FinishPreparationAsync_PreparationStarted_UpdatesStatusAndReturnsDto()
+    {
+        // Arrange
+        var order = new Order(1, 2);
+        var orderId = order.Id;
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
+        order.Accept();
+        order.StartPreparation();
 
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task ServeAsync_Should_Update_Order_And_Return_Dto()
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            order.Accept();
-            order.StartPreparation();
-            order.FinishPreparation();
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock.Setup(r => r.GetByIdAsync(orderId)).ReturnsAsync(order);
+        repositoryMock.Setup(r => r.UpdateAsync(order)).Returns(Task.CompletedTask);
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock.Setup(m => m.ToDto(order)).Returns(expectedDto);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
+        // Act
+        var result = await service.FinishPreparationAsync(orderId);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
+    }
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+    [Fact]
+    public async Task ServeAsync_PreparationFinished_UpdatesStatusAndReturnsDto()
+    {
+        // Arrange
+        var order = new Order(1, 2);
+        var orderId = order.Id;
 
-            // Act
-            var result = await service.ServeAsync(orderId);
+        order.Accept();
+        order.StartPreparation();
+        order.FinishPreparation();
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
-
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task CloseAsync_Should_Update_Order_And_Return_Dto()
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            order.Accept();
-            order.StartPreparation();
-            order.FinishPreparation();
-            order.Serve();
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock.Setup(r => r.GetByIdAsync(orderId)).ReturnsAsync(order);
+        repositoryMock.Setup(r => r.UpdateAsync(order)).Returns(Task.CompletedTask);
 
-            var orderId = order.Id;
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock.Setup(m => m.ToDto(order)).Returns(expectedDto);
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        // Act
+        var result = await service.ServeAsync(orderId);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
+    }
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+    [Fact]
+    public async Task CloseAsync_OrderServed_UpdatesStatusAndReturnsDto()
+    {
+        // Arrange
+        var order = new Order(1, 2);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        order.Accept();
+        order.StartPreparation();
+        order.FinishPreparation();
+        order.Serve();
 
-            // Act
-            var result = await service.CloseAsync(orderId);
+        var orderId = order.Id;
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
-
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task CancelAsync_Should_Update_Order_And_Return_Dto()
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var order = new Order(1, 2);
-            var orderId = order.Id;
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            var expectedDto = new OrderDto
-            {
-                CustomerId = order.CustomerId,
-                TableId = order.TableId,
-                Items = new List<OrderItemDto>()
-            };
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock.Setup(r => r.GetByIdAsync(orderId)).ReturnsAsync(order);
+        repositoryMock.Setup(r => r.UpdateAsync(order)).Returns(Task.CompletedTask);
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(order);
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock.Setup(m => m.ToDto(order)).Returns(expectedDto);
 
-            repositoryMock
-                .Setup(r => r.UpdateAsync(order))
-                .Returns(Task.CompletedTask);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            var mapperMock = new Mock<IMapperOrder>();
-            mapperMock
-                .Setup(m => m.ToDto(order))
-                .Returns(expectedDto);
+        // Act
+        var result = await service.CloseAsync(orderId);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
+    }
 
-            // Act
-            var result = await service.CancelAsync(orderId);
+    [Fact]
+    public async Task CancelAsync_ValidOrder_UpdatesStatusAndReturnsDto()
+    {
+        // Arrange
+        var order = new Order(1, 2);
+        var orderId = order.Id;
 
-            // Assert
-            Assert.Equal(expectedDto.CustomerId, result.CustomerId);
-            Assert.Equal(expectedDto.TableId, result.TableId);
-
-            repositoryMock.Verify(r => r.GetByIdAsync(orderId), Times.Once);
-            repositoryMock.Verify(r => r.UpdateAsync(order), Times.Once);
-            mapperMock.Verify(m => m.ToDto(order), Times.Once);
-        }
-
-        [Fact]
-        public async Task GetAsync_Should_Throw_NotFoundException_When_Order_Not_Found()
+        var expectedDto = new OrderDto
         {
-            // Arrange
-            var orderId = new Guid();
+            CustomerId = order.CustomerId,
+            TableId = order.TableId,
+            Items = new List<OrderItemDto>()
+        };
 
-            var repositoryMock = new Mock<IOrderRepository>();
-            repositoryMock
-                .Setup(r => r.GetByIdAsync(orderId))
-                .ReturnsAsync(null as Order);
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock.Setup(r => r.GetByIdAsync(orderId)).ReturnsAsync(order);
+        repositoryMock.Setup(r => r.UpdateAsync(order)).Returns(Task.CompletedTask);
 
-            var mapperMock = new Mock<IMapperOrder>();
+        var mapperMock = new Mock<IMapperOrder>();
+        mapperMock.Setup(m => m.ToDto(order)).Returns(expectedDto);
 
-            var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
 
-            // Act & Assert
-            await Assert.ThrowsAsync<NotFoundException>(() => service.GetAsync(orderId));
-        }
+        // Act
+        var result = await service.CancelAsync(orderId);
 
+        // Assert
+        Assert.Equal(expectedDto.CustomerId, result.CustomerId);
+        Assert.Equal(expectedDto.TableId, result.TableId);
+    }
+
+    [Fact]
+    public async Task GetAsync_OrderDoesNotExist_ThrowsNotFoundException()
+    {
+        // Arrange
+        var orderId = new Guid();
+
+        var repositoryMock = new Mock<IOrderRepository>();
+        repositoryMock
+            .Setup(r => r.GetByIdAsync(orderId))
+            .ReturnsAsync(null as Order);
+
+        var mapperMock = new Mock<IMapperOrder>();
+
+        var service = new OrderService(repositoryMock.Object, mapperMock.Object);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(() => service.GetAsync(orderId));
     }
 }

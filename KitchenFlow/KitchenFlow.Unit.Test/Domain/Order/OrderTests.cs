@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Arta.Base.Core.Exceptions;
+using Arta.Domain.Core.Commons;
+using KitchenFlow.Domain.Order;
+using System;
 using System.Linq;
 using Xunit;
-using KitchenFlow.Domain.Order;
 using static Arta.Domain.Core.Commons.Enums.Enums;
-using Arta.Base.Core.Exceptions;
 
 namespace KitchenFlow.Tests.Domain
 {
@@ -95,7 +96,7 @@ namespace KitchenFlow.Tests.Domain
             order.StartPreparation();
 
             // Act & Assert
-            Assert.Throws<BaseException>(() =>
+            Assert.Throws<DomainValidationException>(() =>
                 order.AddItem(1, 1, 10m));
         }
 
