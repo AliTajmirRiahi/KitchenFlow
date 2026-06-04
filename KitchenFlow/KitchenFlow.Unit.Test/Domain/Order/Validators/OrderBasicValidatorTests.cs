@@ -11,12 +11,7 @@ namespace KitchenFlow.Unit.Test.Domain.Order.Validators
     /// </summary>
     public class OrderBasicValidatorTests
     {
-        private readonly OrderBasicValidator _validator;
-
-        public OrderBasicValidatorTests()
-        {
-            _validator = new OrderBasicValidator();
-        }
+        private readonly OrderBasicValidator _validator = new();
 
         #region CustomerId
 
